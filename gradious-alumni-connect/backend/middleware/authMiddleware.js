@@ -1,10 +1,7 @@
-// /// ==============================
-// // 🛡 AUTH MIDDLEWARE (FIXED)
-// // ==============================
-
 // const jwt = require("jsonwebtoken");
+// const db = require("../config/db"); // import database
 
-// exports.verifyToken = (req, res, next) => {
+// exports.verifyToken = async (req, res, next) => {
 //     // 1️⃣ Get Authorization header
 //     const authHeader = req.headers.authorization;
 
@@ -27,27 +24,26 @@
 //         // 3️⃣ Verify token
 //         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-//         // 4️⃣ Attach user data
+//         // 4️⃣ Attach user data to request
 //         req.user = decoded;
+
+//         // 5️⃣ Update last seen time
+//         await db.query("UPDATE users SET last_seen = NOW() WHERE id = ?", [decoded.id]);
 
 //         next();
 //     } catch (error) {
+//         console.log("JWT VERIFY ERROR:", error);
+
 //         return res.status(401).json({
 //             message: "Invalid or Expired Token",
 //         });
 //     }
 // };
 
-// ==============================
-// 🛡 AUTH MIDDLEWARE (UPDATED)
-// ==============================
-
 const jwt = require("jsonwebtoken");
-const db = require("../config/db"); // import database
+const db = require("../config/db");
 
 exports.verifyToken = async (req, res, next) => {
-
-    // 1️⃣ Get Authorization header
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -56,7 +52,6 @@ exports.verifyToken = async (req, res, next) => {
         });
     }
 
-    // 2️⃣ Extract token after "Bearer "
     const token = authHeader.split(" ")[1];
 
     if (!token) {
@@ -66,27 +61,22 @@ exports.verifyToken = async (req, res, next) => {
     }
 
     try {
-
-        // 3️⃣ Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // 4️⃣ Attach user data to request
         req.user = decoded;
 
-        // 5️⃣ Update last seen time
-        await db.query(
-            "UPDATE users SET last_seen = NOW() WHERE id = ?",
-            [decoded.id]
-        );
+        await db.query("UPDATE users SET last_seen = NOW() WHERE id = ?", [decoded.id]);
 
         next();
-
     } catch (error) {
+        console.log("JWT VERIFY ERROR:", error);
 
         return res.status(401).json({
             message: "Invalid or Expired Token",
         });
-
     }
+};
 
+module.exports = {
+    verifyToken: exports.verifyToken,
 };

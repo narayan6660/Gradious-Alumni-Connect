@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
             position,
             linkedin_url,
         } = req.body;
-const userRole = role === "admin" ? "admin" : "alumni";
+        const userRole = role === "admin" ? "admin" : "alumni";
         // Check existing email
         const [existingUser] = await db.query("SELECT id FROM users WHERE email = ?", [email]);
 
@@ -48,7 +48,7 @@ const userRole = role === "admin" ? "admin" : "alumni";
                 email,
                 phone || null,
                 hashedPassword,
-               userRole,
+                userRole,
                 course || null,
                 college_name || null,
                 batch || null,
@@ -72,7 +72,7 @@ const userRole = role === "admin" ? "admin" : "alumni";
         console.error("Register Error:", error);
 
         res.status(500).json({
-            message: "Server Error ❌",
+            message: error.message,
         });
     }
 };
@@ -147,7 +147,7 @@ exports.login = async (req, res) => {
         console.error("Login Error:", error);
 
         res.status(500).json({
-            message: "Server Error ❌",
+            message: error.message,
         });
     }
 };

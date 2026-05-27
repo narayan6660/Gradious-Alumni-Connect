@@ -45,7 +45,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "https://gradious-backend.onrender.com/api",
+    baseURL: "http://localhost:5000/api",
 });
 
 // ✅ Attach token to every request
@@ -71,10 +71,25 @@ API.interceptors.response.use(
             return Promise.reject(error);
         }
 
-        if (status === 401) {
+        // if (status === 401) {
+        // console.warn("🔒 Session expired. Logging out...");
+
+        // sessionStorage.removeItem("token");
+        // sessionStorage.removeItem("user");
+
+        // window.location.href = "/login";
+        // }
+        if (
+            status === 401 &&
+            !error.config?.url?.includes("/auth/login") &&
+            !error.config?.url?.includes("/auth/register")
+        ) {
             console.warn("🔒 Session expired. Logging out...");
 
+            console.log("401 ERROR FROM:", error.config?.url);
+
             sessionStorage.removeItem("token");
+
             sessionStorage.removeItem("user");
 
             window.location.href = "/login";

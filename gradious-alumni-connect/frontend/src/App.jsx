@@ -142,6 +142,7 @@
 // }
 
 // export default App;
+
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 
 import Login from "./pages/Login";

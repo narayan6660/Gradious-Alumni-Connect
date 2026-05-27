@@ -952,6 +952,7 @@ exports.getChatUsers = async (req, res) => {
 // ==============================
 
 exports.getAlumniDashboard = async (req, res) => {
+    console.log("DASHBOARD API HIT");
     try {
         const alumniId = req.user.id;
 

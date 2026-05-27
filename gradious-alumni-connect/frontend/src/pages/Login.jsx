@@ -141,7 +141,7 @@ function Login() {
 
         try {
             const res = await API.post("/auth/login", formData);
-
+            console.log(res);
             const {token, user} = res.data;
 console.log("LOGIN RESPONSE:", res.data);
 console.log("USER:", user);
