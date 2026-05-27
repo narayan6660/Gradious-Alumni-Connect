@@ -1,5 +1,3 @@
-
-
 console.log("AUTH CONTROLLER LOADED");
 
 const db = require("../config/db");
@@ -83,6 +81,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const {email, password} = req.body;
+        console.log("Api HIT:", req.body);
 
         const [user] = await db.query("SELECT * FROM users WHERE email = ? AND is_deleted = 0", [email]);
 
